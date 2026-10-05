@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}Rooms – Esaystay{% endblock %}
+{% block content %}
+
+<div class="container py-5">
+    <h1 class="mb-4 fw-bold text-center"> Discover Your Perfect Stay</h1>
+
+    <!-- Filter Form -->
+    <form class="row g-3 justify-content-center mb-5 p-3 bg-light rounded shadow-sm">
+        <div class="col-sm-3">
+            <input type="date" name="check_in" class="form-control" value="{{ request.GET.check_in }}">
+        </div>
+        <div class="col-sm-3">
+            <input type="date" name="check_out" class="form-control" value="{{ request.GET.check_out }}">
+        </div>
+        <div class="col-sm-3">
+            <input type="number" name="capacity" class="form-control" placeholder="Min capacity" value="{{ request.GET.capacity }}">
+        </div>
+        <div class="col-sm-2">
+            <button class="btn btn-primary w-100 fw-bold" type="submit">
+                <i class="bi bi-funnel-fill"></i> Filter
+            </button>
+        </div>
+    </form>
+
+    <!-- Rooms Grid -->
+    <div class="row">
+        {% for room in rooms %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden room-card">
+                {% if room.image %}
+                <img src="{{ room.image.url }}" class="card-img-top" alt="{{ room.name }}">
+                {% else %}
+                <img src="https://via.placeholder.com/400x250" class="card-img-top" alt="Room Image">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title fw-bold">{{ room.name }}</h5>
+                    <p class="card-text text-muted small">{{ room.description|truncatewords:20 }}</p>
+                    <div class="mt-auto">
+                        <p class="fw-bold text-primary mb-2">
+                            ${{ room.price_per_night }} / night
+                            <span class="badge bg-secondary ms-2">Capacity: {{ room.capacity }}</span>
+                        </p>
+                        <a class="btn btn-outline-primary w-100 fw-bold" href="{% url 'book_room' room.pk %}">
+                            <i class="bi bi-calendar-check"></i> Book Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center text-muted">No rooms available at the moment.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+    .room-card img {
+        transition: transform 0.4s ease-in-out;
+                height: 250px;
+        object-fit: cover;
+
+    }
+    .room-card:hover img {
+        transform: scale(1.05);
+    }
+    .room-card:hover {
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}My Bookings – Esaystay{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4 fw-bold text-primary text-center">My Bookings</h1>
+
+    {% if bookings %}
+        <div class="row g-4">
+            {% for b in bookings %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card  overflow-hidden booking-card">
+                    {% if b.room.image %}
+                        <img src="{{ b.room.image.url }}" class="card-img-top" alt="{{ b.room.name }}">
+                    {% else %}
+                        <img src="{% static 'images/no-image.jpg' %}" class="card-img-top" alt="No image">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">{{ b.room.name }}</h5>
+                        <p class="text-muted mb-2">
+                            <i class="bi bi-calendar-event"></i> {{ b.check_in }} → {{ b.check_out }}
+                        </p>
+                        <p class="mb-1"><strong>Guests:</strong> {{ b.guests }}</p>
+                        <p class="mb-1"><strong>Price/night:</strong> ${{ b.room.price_per_night }}</p>
+                        <p class="text-success fw-bold">Total: ${{ b.total_cost }}</p>
+                        <small class="text-muted">Booked on {{ b.created_at|date:'Y-m-d H:i' }}</small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info p-4 rounded-4 shadow-sm">
+            You have no bookings yet. Start exploring rooms!
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.booking-card img {
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+.booking-card:hover img {
+    transform: scale(1.05);
+}
+.booking-card {
+    transition: box-shadow 0.3s ease;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+.booking-card:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+</style>
+{% endblock %}

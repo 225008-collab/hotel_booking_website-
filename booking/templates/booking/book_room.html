@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}Book {{ room.name }} – Easystay{% endblock %}
+
+{% block content %}
+<div class="container py-5 box">
+  <div class="row g-4">
+    
+    <!-- تفاصيل الغرفة -->
+    <div class="col-lg-6">
+      <div class="card  border-0">
+        {% if room.image %}
+          <img src="{{ room.image.url }}" class="card-img-top rounded-top"  alt="{{ room.name }}">
+        {% endif %}
+        <div class="card-body">
+          <h3 class="card-title fw-bold mb-2">{{ room.name }}</h3>
+          <p class="text-muted">{{ room.description }}</p>
+          <hr>
+          <p class="mb-1"><strong>💲 Price:</strong> ${{ room.price_per_night }} / night</p>
+          <p class="mb-0"><strong>👥 Capacity:</strong> {{ room.capacity }} guests</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- نموذج الحجز -->
+    <div class="col-lg-6">
+      <div class="card shadow-sm border-0 p-4">
+        <h4 class="fw-bold mb-3 text-success">Reserve Your Stay</h4>
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Check-in</label>
+            {{ form.check_in }}
+            {% if form.check_in.errors %}
+              <div class="text-danger small">{{ form.check_in.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Check-out</label>
+            {{ form.check_out }}
+            {% if form.check_out.errors %}
+              <div class="text-danger small">{{ form.check_out.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Guests</label>
+            {{ form.guests }}
+            {% if form.guests.errors %}
+              <div class="text-danger small">{{ form.guests.errors }}</div>
+            {% endif %}
+          </div>
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger py-2">{{ form.non_field_errors }}</div>
+          {% endif %}
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success px-4">Confirm Booking</button>
+            <a href="{% url 'room_list' %}" class="btn btn-outline-secondary px-4">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+<style>
+  .box {
+    margin-top: 10px;
+    margin-bottom: 0px;
+  }
+  .card {
+    border-radius: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+</style>
+{% endblock %}
